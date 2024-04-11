@@ -5,14 +5,6 @@
 #include <sys/wait.h>
 
 int main() {
-    // 압력센서에서 착석을 인지할 때까지 기다린다.
-    int seated = 0;
-    while (seated) {
-        seated = 1; // 압력 센서값을 계속 읽어드린다.
-        /*if(seated > threshold){
-            seated = 1;
-        }*/
-    }
 
     pid_t volume_control_pid = fork();
     if(volume_control_pid == 0){
