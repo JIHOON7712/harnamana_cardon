@@ -1,6 +1,7 @@
 import os
 import signal
 import time
+import socket
 
 import cv2
 
@@ -13,6 +14,9 @@ import cv2
 # Variables to track blinking frequency
 blink_counter = 0
 blink_start_time = None
+receiver_ip = "192.168.1.11"
+receiver_port = 50000
+message = "sleep"
 
 sleep_state = ""
 
@@ -66,10 +70,14 @@ while True:
         # 시그널을 보냅니다.
         parent_pid = os.getppid()
         print("sleeping parent pid",parent_pid,"\n")
+        sender_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        sender_socket.sendto(message.encode(), (receiver_ip, receiver_port))
         os.kill(parent_pid, signal.SIGUSR1)
 
         # 10초 딜레이
         time.sleep(10)
+        sender_socket.close()
     
     # Display the frame with eye rectangles and blinking frequency
     cv2.putText(frame, f"Blinks: {blink_counter}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
