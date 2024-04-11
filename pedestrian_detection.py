@@ -34,9 +34,12 @@ while True:
     # 검출 결과 화면 표시
     for (x, y, w, h) in detected:
         c = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        cv2.rectangle(frame, (x, y, w, h), c, 3)
-        human_detecting_counter = human_detecting_counter + 1
-        print(human_detecting_counter)
+
+        if 180 <= x <= 400:
+            cv2.rectangle(frame, (x, y, w, h), c, 3)
+
+            human_detecting_counter = human_detecting_counter + 1
+            print(human_detecting_counter)
 
     cv2.imshow('frame', frame)
 
