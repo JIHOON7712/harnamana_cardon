@@ -7,7 +7,6 @@
 
 #include <wiringPi.h>
 #include <string>
-#include "softPwm.h"
 
 using namespace std;
 
@@ -15,31 +14,6 @@ using namespace std;
 #define echoPin 29	//gpio 18
 
 #define SERVO1 26
-
-void servo_setup() { // 서보모터 셋업
-    wiringPiSetup(); // WiringPi 초기화
-    pinMode(SERVO1, OUTPUT);
-}
-
-void window_open(){ // 창문 열기
-    softPwmCreate(SERVO1, 0, 200);
-    // softPwmWrite(SERVO1, 10);   // -90도
-    // delay(1000);
-    softPwmWrite(SERVO1, 15);   // 0도
-    delay(1000);
-    softPwmWrite(SERVO1, 20);   // +90도
-    delay(1000);
-}
-
-void window_close(){ // 창문 닫기
-    softPwmCreate(SERVO1, 0, 200);
-    // softPwmWrite(SERVO1, 10);   // -90도
-    // delay(1000);
-    softPwmWrite(SERVO1, 20);   // +90도
-    delay(1000);
-    softPwmWrite(SERVO1, 15);   // 0도
-    delay(1000);
-}
 
 void pedestrianCheckHandler(int sig){
     //초음파 센서로 거리 측정하고
@@ -98,16 +72,25 @@ int main(){
         }
     }
     else{
-        sleep(1);
-        printf("%d\n",getpid());
-        struct sigaction pedestriancheck;
-        pedestriancheck.sa_handler = pedestrianCheckHandler;
-        sigemptyset(&pedestriancheck.sa_mask);
-        pedestriancheck.sa_flags = 0;
-        sigaction(SIGUSR1, &pedestriancheck, 0);
+        pid_t checksleepdust = fork();
+            if(checksleepdust == 0){
+                if (execlp("./checksleepdust", "checksleepdust", NULL) == -1) {
+                perror("execlp"); // 오류 메시지 출력
+                exit(EXIT_FAILURE); // 실패 시 자식 프로세스 종료
+            }
+        }
+        else{
+            sleep(1);
+            printf("%d\n",getpid());
+            struct sigaction pedestriancheck;
+            pedestriancheck.sa_handler = pedestrianCheckHandler;
+            sigemptyset(&pedestriancheck.sa_mask);
+            pedestriancheck.sa_flags = 0;
+            sigaction(SIGUSR1, &pedestriancheck, 0);
 
-        while(true){
-            //내부 라즈베리파이로부터 값을 받아오기
+            while(true){
+                //내부 라즈베리파이로부터 값을 받아오기
+            }
         }
     }
 }
