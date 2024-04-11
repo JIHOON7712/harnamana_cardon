@@ -28,17 +28,20 @@ void readCANData(int soc) {
 }
 
 void processSensorData() {
-    // 여기서 sensorDataList를 처리
     for (const auto& data : sensorDataList) {
-        // 가정: frame.data에는 5개의 센서 값이 저장되어 있음
-        if(data.frame.can_dlc >= 5) { // 데이터 길이 확인
-            for (int i = 0; i < 5; i++) { // 5개 센서 값 처리
-                unsigned char sensorValue = data.frame.data[i]; // 센서 값 추출
-                cout << "Sensor " << i + 1 << ": " << (int)sensorValue << "\n"; // 센서 값 출력
-                // 여기서 각 센서 값에 대한 추가 처리를 수행할 수 있음
-            }
+        if(data.frame.can_dlc >= 6) { // 데이터 길이 확인
+            
+            unsigned char pressureValue = data.frame.data[0];
+            unsigned char soundValue = data.frame.data[1];
+            unsigned char tempValue = data.frame.data[2];
+            unsigned char humidValue = data.frame.data[3];
+            unsigned char dustValue = data.frame.data[4];
+            unsigned char variableregValue = data.frame.data[5];
+
+            cout << (int)pressureValue << " " << (int)soundValue << " " << (int)tempValue << " " << (int)humidValue << " " << (int)dustValue << " " << (int)variableregValue << "\n";
         }
     }
+    sensorDataList.clear(); // sensorDataList 비우기, 누적되는 것을 방지하기 위함.
 }
 
 
