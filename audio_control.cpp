@@ -110,7 +110,7 @@ void sensorDetection(){
         cout << (int)sensorDataList[0].frame.data[0] << " " << (int)sensorDataList[0].frame.data[1] << " " << (int)sensorDataList[0].frame.data[2] << " " << (int)sensorDataList[0].frame.data[3] << " " << (int)sensorDataList[0].frame.data[4] << " " << (int)sensorDataList[0].frame.data[5] << "\n";
 
         //온습도
-        if(sensorDataList[0].frame.data[2] >= 20 && sensorDataList[0].frame.data[0] <=10 && sensor_flag != 1){
+        if(sensorDataList[0].frame.data[2] >= 30 && sensorDataList[0].frame.data[0] <=10 && sensor_flag != 1){
             printf("what the fuck\n");
             sensor_flag = 1;
             kill(parent_pid, SIGRTMIN + 2);

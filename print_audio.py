@@ -3,7 +3,39 @@ import os
 import signal
 import time
 import pygame
+import RPi.GPIO as GPIO
 
+# GPIO 핀 번호 기준 설정
+GPIO.setmode(GPIO.BCM)
+
+ENA = 18 # WiringPi 핀 1은 BCM 핀 18에 해당
+IN1 = 27 # WiringPi 핀 2는 BCM 핀 27에 해당
+IN2 = 22 # WiringPi 핀 3은 BCM 핀 22에 해당
+
+# 핀 설정
+GPIO.setup(ENA, GPIO.OUT)
+GPIO.setup(IN1, GPIO.OUT)
+GPIO.setup(IN2, GPIO.OUT)
+
+# 모터 회전 방향 제어 함수
+def setMotorDirection(direction):
+    if direction == 1:
+        GPIO.output(IN1, GPIO.HIGH)
+        GPIO.output(IN2, GPIO.LOW)
+    elif direction == -1:
+        GPIO.output(IN1, GPIO.LOW)
+        GPIO.output(IN2, GPIO.HIGH)
+    else:
+        GPIO.output(IN1, GPIO.LOW)
+        GPIO.output(IN2, GPIO.LOW)
+
+# PWM 설정
+pwm = GPIO.PWM(ENA, 100) # PWM 핀 설정, 100Hz
+pwm.start(0) # PWM 시작, 0% 듀티 사이클
+
+# 모터 속도 제어 함수 (0~100)
+def setMotorSpeed(speed):
+    pwm.ChangeDutyCycle(speed)
 
 os.getppid()
 action = sys.argv[1]
@@ -21,8 +53,14 @@ if action == "sleep":
 if action == "temp":
     # 모터 제어
     # temp인 경우 오디오 출력
+    try:
+        setMotorDirection(1)
+        setMotorSpeed(80)
+        time.sleep(10)
+        setMotorDirection(0)
     
+    finally:
+        pwm.stop()
+        GPIO.cleanup()
     
-
-
 #TTS
