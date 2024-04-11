@@ -111,26 +111,30 @@ void sensorDetection(){
 
         //온습도
         if(sensorDataList[0].frame.data[2] >= 30 && sensorDataList[0].frame.data[0] <=10 && sensor_flag != 1){
-            printf("what the fuck\n");
+            printf("Success TEMPERATURE\n");
             sensor_flag = 1;
             kill(parent_pid, SIGRTMIN + 2);
         }
         //소리감지 센서
         if(sensorDataList[0].frame.data[1] >= 10 && sensor_flag != 2){
+            printf("Success SOUND\n");
             sensor_flag = 2;
             kill(parent_pid, SIGRTMIN + 4);
         }
 
         //미세먼지 센서
         if(sensorDataList[0].frame.data[4] >= 20 && sensor_flag != 3){
+            printf("Success DUST\n");
             sensor_flag = 3;
             kill(parent_pid, SIGRTMIN + 3);
         }
+
         //계기판 경고인식해서 
         //kill(parent_pid, SIGRTMIN + 5);
-        //스위치 값 인식해서 외부라파로 전송하기
+
+        //가변저항 외부라파로 전송하기
         if(sensorDataList[0].frame.data[5] >= 130){
-        //외부라파로 전송
+            printf("Success SOUND\n");
         }
         sensorDataList.clear();
     }

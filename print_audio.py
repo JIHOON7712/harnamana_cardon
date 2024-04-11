@@ -54,10 +54,15 @@ if action == "temp":
     # 모터 제어
     # temp인 경우 오디오 출력
     try:
-        setMotorDirection(1)
-        setMotorSpeed(80)
-        time.sleep(10)
-        setMotorDirection(0)
+        # setMotorDirection(1)
+        # setMotorSpeed(80)
+        # time.sleep(10)
+        # setMotorDirection(0)
+        pygame.mixer.music.load("wake_up.mp3")
+        pygame.mixer.music.play()
+        # 재생이 끝날 때까지 대기
+        while pygame.mixer.music.get_busy():
+            time.sleep(1)
     
     finally:
         pwm.stop()
