@@ -1,4 +1,4 @@
-/ sensor_data.h
+// sensor_data.h
 #ifndef SENSOR_DATA_H
 #define SENSOR_DATA_H
 
