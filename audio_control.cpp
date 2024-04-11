@@ -23,6 +23,7 @@ using namespace std;
 vector<pair<string,int>> event;
 pid_t ppid = getppid(); //music player pid
 
+int sensor_flag = 0;
 int soc;
 int readBytes;
 struct sockaddr_can addr;
@@ -103,26 +104,35 @@ void sensorDetection(){
     printf("Sensor Detection process parent pid : %d\n",getppid());
     pid_t parent_pid = getppid();
 
-    readCANData(soc);
+    while(1){
+        readCANData(soc);
 
-    //온습도
-    if(sensorDataList[0].frame.data[2] >= 20 && sensorDataList[0].frame.data[0] <=10){
-        kill(parent_pid, SIGRTMIN + 2);
-    }
-    //미세먼지 센서
-    if(sensorDataList[0].frame.data[4] >= 20){
-        kill(parent_pid, SIGRTMIN + 3);
-    }
-    //소리감지 센서
-    if(sensorDataList[0].frame.data[1] >= 10){
-        
-        kill(parent_pid, SIGRTMIN + 4);
-    }
-    //계기판 경고인식해서 
-    //kill(parent_pid, SIGRTMIN + 5);
-    //스위치 값 인식해서 외부라파로 전송하기
-    if(sensorDataList[0].frame.data[5] >= 130){
-       //외부라파로 전송
+        cout << (int)sensorDataList[0].frame.data[0] << " " << (int)sensorDataList[0].frame.data[1] << " " << (int)sensorDataList[0].frame.data[2] << " " << (int)sensorDataList[0].frame.data[3] << " " << (int)sensorDataList[0].frame.data[4] << " " << (int)sensorDataList[0].frame.data[5] << "\n";
+
+        //온습도
+        if(sensorDataList[0].frame.data[2] >= 20 && sensorDataList[0].frame.data[0] <=10 && sensor_flag != 1){
+            printf("what the fuck\n");
+            sensor_flag = 1;
+            kill(parent_pid, SIGRTMIN + 2);
+        }
+        //소리감지 센서
+        if(sensorDataList[0].frame.data[1] >= 10 && sensor_flag != 2){
+            sensor_flag = 2;
+            kill(parent_pid, SIGRTMIN + 4);
+        }
+
+        //미세먼지 센서
+        if(sensorDataList[0].frame.data[4] >= 20 && sensor_flag != 3){
+            sensor_flag = 3;
+            kill(parent_pid, SIGRTMIN + 3);
+        }
+        //계기판 경고인식해서 
+        //kill(parent_pid, SIGRTMIN + 5);
+        //스위치 값 인식해서 외부라파로 전송하기
+        if(sensorDataList[0].frame.data[5] >= 130){
+        //외부라파로 전송
+        }
+        sensorDataList.clear();
     }
 }
 
@@ -183,7 +193,7 @@ int main() {
 
     if(sleep_pid == 0){
         sleep(3);
-        sleepDectection();
+        //sleepDectection();
     }else{
         pid_t sensor_pid = fork();
 
