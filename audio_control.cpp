@@ -117,45 +117,31 @@ void sensorDetection(){
 
         //온습도
         if(sensorDataList[0].frame.data[2] >= 30 && sensorDataList[0].frame.data[0] <=10 && sensor_flag != 1){
-            printf("what the fuck\n");
+            printf("Success TEMPERATURE\n");
             sensor_flag = 1;
             kill(parent_pid, SIGRTMIN + 2);
         }
         //소리감지 센서
         if(sensorDataList[0].frame.data[1] >= 10 && sensor_flag != 2){
+            printf("Success SOUND\n");
             sensor_flag = 2;
             kill(parent_pid, SIGRTMIN + 4);
         }
 
         //미세먼지 센서
         if(sensorDataList[0].frame.data[4] >= 20 && sensor_flag != 3){
+            printf("Success DUST\n");
             sensor_flag = 3;
             kill(parent_pid, SIGRTMIN + 3);
         }
+
         //계기판 경고인식해서 
         //kill(parent_pid, SIGRTMIN + 5);
-        //스위치 값 인식해서 외부라파로 전송하기
+
+        //가변저항 외부라파로 전송하기
         if(sensorDataList[0].frame.data[5] >= 130){
-            const char* message = "Hello from Raspberry Pi 2!";
-
-            // 수신측 주소 설정
-            struct sockaddr_in receiverAddr;
-            memset(&receiverAddr, 0, sizeof(receiverAddr));
-            receiverAddr.sin_family = AF_INET;
-            receiverAddr.sin_port = htons(RECEIVER_PORT);
-            receiverAddr.sin_addr.s_addr = inet_addr(RECEIVER_IP);
-
-            // 소켓 생성
-            int senderSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-
-            // 데이터 송신
-            while(1){
-                ssize_t bytesSent = sendto(senderSocket, message, strlen(message), 0,
-                                            (struct sockaddr*)&receiverAddr, sizeof(receiverAddr));
-            }
-            sleep(3);
+        //외부라파로 전송
         }
-
         sensorDataList.clear();
     }
 }
