@@ -8,6 +8,9 @@
 #include <algorithm>
 #include <string>
 #include <cstring>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 //CAN 통신
 #include "sensor_data.h"
 #include <iostream>
@@ -17,6 +20,9 @@
 #include <net/if.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
+
+#define RECEIVER_IP "192.168.1.11"
+#define RECEIVER_PORT 50001
 
 using namespace std;
 
@@ -134,7 +140,7 @@ void sensorDetection(){
 
         //가변저항 외부라파로 전송하기
         if(sensorDataList[0].frame.data[5] >= 130){
-            printf("Success SOUND\n");
+        //외부라파로 전송
         }
         sensorDataList.clear();
     }
