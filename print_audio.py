@@ -18,5 +18,11 @@ if action == "sleep":
     while pygame.mixer.music.get_busy():
         time.sleep(1)
 
+if action == "temp":
+    # 모터 제어
+    # temp인 경우 오디오 출력
+    
+    
+
 
 #TTS
