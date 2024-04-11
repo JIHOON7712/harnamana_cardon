@@ -7,11 +7,39 @@
 
 #include <wiringPi.h>
 #include <string>
+#include "softPwm.h"
 
 using namespace std;
 
 #define trigPin 1	//gpio 21
 #define echoPin 29	//gpio 18
+
+#define SERVO1 26
+
+void servo_setup() { // 서보모터 셋업
+    wiringPiSetup(); // WiringPi 초기화
+    pinMode(SERVO1, OUTPUT);
+}
+
+void window_open(){ // 창문 열기
+    softPwmCreate(SERVO1, 0, 200);
+    // softPwmWrite(SERVO1, 10);   // -90도
+    // delay(1000);
+    softPwmWrite(SERVO1, 15);   // 0도
+    delay(1000);
+    softPwmWrite(SERVO1, 20);   // +90도
+    delay(1000);
+}
+
+void window_close(){ // 창문 닫기
+    softPwmCreate(SERVO1, 0, 200);
+    // softPwmWrite(SERVO1, 10);   // -90도
+    // delay(1000);
+    softPwmWrite(SERVO1, 20);   // +90도
+    delay(1000);
+    softPwmWrite(SERVO1, 15);   // 0도
+    delay(1000);
+}
 
 void pedestrianCheckHandler(int sig){
     //초음파 센서로 거리 측정하고
