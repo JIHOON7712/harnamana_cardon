@@ -8,6 +8,9 @@
 #include <algorithm>
 #include <string>
 #include <cstring>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 //CAN 통신
 #include "sensor_data.h"
 #include <iostream>
@@ -17,6 +20,9 @@
 #include <net/if.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
+
+#define RECEIVER_IP "192.168.1.11"
+#define RECEIVER_PORT 50001
 
 using namespace std;
 
@@ -130,8 +136,26 @@ void sensorDetection(){
         //kill(parent_pid, SIGRTMIN + 5);
         //스위치 값 인식해서 외부라파로 전송하기
         if(sensorDataList[0].frame.data[5] >= 130){
-        //외부라파로 전송
+            const char* message = "Hello from Raspberry Pi 2!";
+
+            // 수신측 주소 설정
+            struct sockaddr_in receiverAddr;
+            memset(&receiverAddr, 0, sizeof(receiverAddr));
+            receiverAddr.sin_family = AF_INET;
+            receiverAddr.sin_port = htons(RECEIVER_PORT);
+            receiverAddr.sin_addr.s_addr = inet_addr(RECEIVER_IP);
+
+            // 소켓 생성
+            int senderSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+            // 데이터 송신
+            while(1){
+                ssize_t bytesSent = sendto(senderSocket, message, strlen(message), 0,
+                                            (struct sockaddr*)&receiverAddr, sizeof(receiverAddr));
+            }
+            sleep(3);
         }
+
         sensorDataList.clear();
     }
 }
