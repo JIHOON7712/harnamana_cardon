@@ -72,6 +72,13 @@ int main() {
 
     std::cout << "수신된 데이터: " << buffer << std::endl;
 
+    if(buffer == "temp"){
+        const char* mp3FilePath = "emergency.mp3";
+        string command = "amixer -D pulse sset Master " + to_string(volumePercentage) + "&";
+        system(command.c_str());
+        system(("mpg123 " + string(mp3FilePath)).c_str());
+    }
+
     window_open();
     sleep(3);
     window_close();

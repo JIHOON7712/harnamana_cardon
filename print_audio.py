@@ -53,7 +53,7 @@ if action == "sleep":
     message = "sleep"
     sender_socket.sendto(message.encode(), (receiver_ip, receiver_port))
     time.sleep(1)
-    pygame.mixer.music.load("wake_up.mp3")
+    pygame.mixer.music.load("drowsy_detection.mp3")
     pygame.mixer.music.play()
     # 재생이 끝날 때까지 대기
     while pygame.mixer.music.get_busy():
@@ -68,7 +68,9 @@ if action == "temp":
         # setMotorSpeed(80)
         # time.sleep(10)
         # setMotorDirection(0)
-        pygame.mixer.music.load("wake_up.mp3")
+        message = "temp"
+        sender_socket.sendto(message.encode(), (receiver_ip, receiver_port))
+        pygame.mixer.music.load("watchout.mp3")
         pygame.mixer.music.play()
         # 재생이 끝날 때까지 대기
         while pygame.mixer.music.get_busy():
@@ -76,12 +78,13 @@ if action == "temp":
     finally:
         pwm.stop()
         GPIO.cleanup()
+    sender_socket.close()
 
 if action == "dust":
     message = "dust"
     sender_socket.sendto(message.encode(), (receiver_ip, receiver_port))
     time.sleep(1)
-    pygame.mixer.music.load("wake_up.mp3")
+    pygame.mixer.music.load("dust.mp3")
     pygame.mixer.music.play()
     # 재생이 끝날 때까지 대기
     while pygame.mixer.music.get_busy():
@@ -90,18 +93,6 @@ if action == "dust":
 
 if action == "sound":
     # sleep인 경우 원하는 mp3 파일을 재생합니다.
-    pygame.mixer.music.load("wake_up.mp3")
-    pygame.mixer.music.play()
-    # 재생이 끝날 때까지 대기
-    while pygame.mixer.music.get_busy():
-        time.sleep(1)
-
-if action == "dashboard":
-    # sleep인 경우 원하는 mp3 파일을 재생합니다.
-    pygame.mixer.music.load("wake_up.mp3")
-    pygame.mixer.music.play()
-    # 재생이 끝날 때까지 대기
-    while pygame.mixer.music.get_busy():
-        time.sleep(1)
+    time.sleep(30);
     
 #TTS
