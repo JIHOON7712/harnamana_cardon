@@ -10,9 +10,9 @@ message = "Hello from Raspberry Pi 1!"
 
 # 송신 소켓 생성
 sender_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-sender_socket.sendto(message.encode(), (receiver_ip, receiver_port))
-time.sleep(2)
+while(1):
+    sender_socket.sendto(message.encode(), (receiver_ip, receiver_port))
+    time.sleep(2)
 
 # 소켓 닫기
 sender_socket.close()
