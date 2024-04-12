@@ -225,9 +225,6 @@ int main() {
         }
         else{
             sleep(2);
-            digitalWrite(27, HIGH);
-            delay(5000);
-            digitalWrite(27, LOW);
             printf("Audio schedule process pid : %d\n",getpid());
             while(1){
                 if(event.size() != 0){
@@ -238,7 +235,6 @@ int main() {
                         event.erase(event.begin());
                         switch(temp){
                             case 1:
-
                                 kill(ppid, SIGRTMIN + 2);
                                 break;
                             case 2:

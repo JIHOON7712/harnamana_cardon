@@ -12,6 +12,11 @@ import json
 
 lock = multiprocessing.Lock()
 
+freq = 44100
+bitsize = -16
+channels = 2
+buffer = 4096
+
 def sigusr1_handler(signum, frame):
     with lock:
         pygame.mixer.music.set_volume(0.2)
@@ -101,7 +106,7 @@ tts = gTTS(scripts, lang="ko")
 file = "result_files/weather.mp3"
 tts.save(file)
 
-pygame.mixer.init()
+pygame.mixer.init(freq, bitsize, channels, buffer)
 pygame.mixer.music.load(file)
 pygame.mixer.music.play()
 time.sleep(6)
