@@ -8,7 +8,6 @@
 #include <algorithm>
 #include <string>
 #include <cstring>
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 //CAN 통신
@@ -25,6 +24,7 @@
 
 #define RECEIVER_IP "192.168.1.11"
 #define RECEIVER_PORT 50001
+#define BUFFER_SIZE 1024
 
 using namespace std;
 
@@ -50,23 +50,6 @@ struct ifreq ifr;
 
 // CAN 네트워크 인터페이스 이름 (예: can0)
 const char *ifname = "can0";
-
-void processSensorData() {
-    for (const auto& data : sensorDataList) {
-        if(data.frame.can_dlc >= 6) { // 데이터 길이 확인
-            
-            unsigned char pressureValue = data.frame.data[0];
-            unsigned char soundValue = data.frame.data[1];
-            unsigned char tempValue = data.frame.data[2];
-            unsigned char humidValue = data.frame.data[3];
-            unsigned char dustValue = data.frame.data[4];
-            unsigned char variableregValue = data.frame.data[5];
-
-            cout << (int)pressureValue << " " << (int)soundValue << " " << (int)tempValue << " " << (int)humidValue << " " << (int)dustValue << " " << (int)variableregValue << "\n";
-        }
-    }
-    sensorDataList.clear(); // sensorDataList 비우기, 누적되는 것을 방지하기 위함.
-}
 
 void readCANData(int soc) {
     int readBytes;
@@ -121,6 +104,7 @@ void sensorDetection(){
     //4가지 센서 값을 받아드리고 기준치 이상인 경우
     printf("Sensor Detection process parent pid : %d\n",getppid());
     pid_t parent_pid = getppid();
+    int cnt = 0;
 
     while(1){
         readCANData(soc);
@@ -151,9 +135,23 @@ void sensorDetection(){
         //kill(parent_pid, SIGRTMIN + 5);
 
         //가변저항 외부라파로 전송하기
-        if(sensorDataList[0].frame.data[5] >= 130){
-        //외부라파로 전송
+        if(cnt > 100 ){
+            cnt = 0;
+            int data = htonl(sensorDataList[sensorDataList.size()-1].frame.data[5]);
+
+            struct sockaddr_in receiverAddr;
+            memset(&receiverAddr, 0, sizeof(receiverAddr));
+            receiverAddr.sin_family = AF_INET;
+            receiverAddr.sin_port = htons(RECEIVER_PORT);
+            receiverAddr.sin_addr.s_addr = inet_addr(RECEIVER_IP);
+
+            // 소켓 생성
+            int senderSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+            ssize_t bytesSent = sendto(senderSocket, &data, sizeof(data), 0,
+                                (struct sockaddr*)&receiverAddr, sizeof(receiverAddr));
+            close(senderSocket);
         }
+        cnt++;
         sensorDataList.clear();
     }
 }

@@ -14,6 +14,5 @@ struct SensorData {
 vector<SensorData> sensorDataList; // 센서 데이터 목록
 
 void readCANData(int soc); // CAN 데이터 읽기 함수
-void processSensorData(); // 센서 데이터 처리 함수
 
 #endif

@@ -10,6 +10,9 @@
 
 using namespace std;
 
+int speed;
+#define RECEIVER_PORT 50001
+
 #define trigPin 1	//gpio 21
 #define echoPin 29	//gpio 18
 
@@ -34,6 +37,7 @@ void pedestrianCheckHandler(int sig){
 	pinMode (trigPin, OUTPUT);
 	pinMode (echoPin, INPUT);
 	
+    int flag = 0;
 	for(;;)
 	{
 		digitalWrite (trigPin, LOW);
@@ -50,12 +54,15 @@ void pedestrianCheckHandler(int sig){
 		travelTime = micros() - startTime;
 		
 		int distance = travelTime / 58;
-		if(distance < 10){
-            const char* mp3FilePath = "watchout.mp3";
-            system("amixer -D pulse sset Master 70%");
+        if(speed <= 70 && distance <= 10){
+            flag = 1;
+            int volumePercentage = 70 / distance;
+            const char* mp3FilePath = "exhaust_sound.mp3";
+            string command = "amixer -D pulse sset Master " + to_string(volumePercentage) + "&";
+            system(command.c_str());
             system(("mpg123 " + string(mp3FilePath)).c_str());
-            break;
         }
+        if(flag == 1) break;
 		printf( "Distance: %dcm\n", distance);
 		delay(200);
 	}
@@ -90,7 +97,24 @@ int main(){
 
             while(true){
                 //내부 라즈베리파이로부터 값을 받아오기
+                int receiverSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+                struct sockaddr_in receiverAddr;
+                memset(&receiverAddr, 0, sizeof(receiverAddr));
+                receiverAddr.sin_family = AF_INET;
+                receiverAddr.sin_port = htons(RECEIVER_PORT);
+                receiverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+                bind(receiverSocket, (struct sockaddr*)&receiverAddr, sizeof(receiverAddr));
+
+                // 데이터 수신
+                struct sockaddr_in senderAddr;
+                socklen_t senderAddrLen = sizeof(senderAddr);
+                ssize_t bytesReceived = recvfrom(receiverSocket, &received_data, sizeof(received_data), 0,
+                                                    (struct sockaddr*)&senderAddr, &senderAddrLen);
+
+                // 수신된 데이터를 네트워크 바이트 순서에서 호스트 바이트 순서로 변환
+                received_data = ntohl(received_data);
             }
+            close(receiverSocket);
         }
     }
 }

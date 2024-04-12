@@ -18,13 +18,10 @@ def sigusr1_handler(signum, frame):
         pygame.mixer.music.set_volume(0.2)
         child_process = multiprocessing.Process(target=sleep_child_process)
         child_process.start()
-        # 자식 프로세스의 종료를 대기합니다.
         child_process.join()
-        # 자식 프로세스가 종료되면 락을 해제합니다.
         pygame.mixer.music.set_volume(1.0)
 
 def sleep_child_process():
-    # 자식 프로세스가 해야 할 작업을 수행합니다.
     os.execlp("python3", "python3", "print_audio.py", "sleep")
 
 def temp_handler(signum, frame):
@@ -32,13 +29,10 @@ def temp_handler(signum, frame):
         pygame.mixer.music.set_volume(0.2)
         child_process = multiprocessing.Process(target=temp_child_process)
         child_process.start()
-        # 자식 프로세스의 종료를 대기합니다.
         child_process.join()
-        # 자식 프로세스가 종료되면 락을 해제합니다.
         pygame.mixer.music.set_volume(1.0)
 
 def temp_child_process():
-    # 자식 프로세스가 해야 할 작업을 수행합니다.
     os.execlp("python3", "python3", "print_audio.py", "temp")
 
 def dust_handler(signum, frame):
@@ -46,13 +40,10 @@ def dust_handler(signum, frame):
         pygame.mixer.music.set_volume(0.2)
         child_process = multiprocessing.Process(target=dust_child_process)
         child_process.start()
-        # 자식 프로세스의 종료를 대기합니다.
         child_process.join()
-        # 자식 프로세스가 종료되면 락을 해제합니다.
         pygame.mixer.music.set_volume(1.0)
 
 def dust_child_process():
-    # 자식 프로세스가 해야 할 작업을 수행합니다.
     os.execlp("python3", "python3", "print_audio.py", "dust")
 
 def sound_handler(signum, frame):
@@ -60,13 +51,10 @@ def sound_handler(signum, frame):
         pygame.mixer.music.set_volume(0.2)
         child_process = multiprocessing.Process(target=sound_child_process)
         child_process.start()
-        # 자식 프로세스의 종료를 대기합니다.
         child_process.join()
-        # 자식 프로세스가 종료되면 락을 해제합니다.
         pygame.mixer.music.set_volume(1.0)
 
 def sound_child_process():
-    # 자식 프로세스가 해야 할 작업을 수행합니다.
     os.execlp("python3", "python3", "print_audio.py", "sound")
 
 def dashboard_handler(signum, frame):
@@ -75,13 +63,10 @@ def dashboard_handler(signum, frame):
         child_process = multiprocessing.Process(target=dashboard_child_process)
         print(os.getpid())
         child_process.start()
-        # 자식 프로세스의 종료를 대기합니다.
         child_process.join()
-        # 자식 프로세스가 종료되면 락을 해제합니다.
         pygame.mixer.music.set_volume(1.0)
 
 def dashboard_child_process():
-    # 자식 프로세스가 해야 할 작업을 수행합니다.
     os.execlp("python3", "python3", "print_audio.py", "dashboard")
 
 signal.signal(signal.SIGUSR1, sigusr1_handler)

@@ -4,6 +4,12 @@ import signal
 import time
 import pygame
 import RPi.GPIO as GPIO
+import socket
+
+receiver_ip = "192.168.1.11"
+receiver_port = 50000
+
+sender_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # GPIO 핀 번호 기준 설정
 GPIO.setmode(GPIO.BCM)
@@ -53,11 +59,15 @@ def led_off(pin):
 
 if action == "sleep":
     # sleep인 경우 원하는 mp3 파일을 재생합니다.
-    pygame.mixer.music.load("wake_up.mp3")
+    message = "sleep"
+    sender_socket.sendto(message.encode(), (receiver_ip, receiver_port))
+    time.sleep(1)
+    pygame.mixer.music.load("drowsy_detection.mp3")
     pygame.mixer.music.play()
     # 재생이 끝날 때까지 대기
     while pygame.mixer.music.get_busy():
         time.sleep(1)
+    sender_socket.close()
 
 if action == "temp":
     # 모터 제어
@@ -80,29 +90,21 @@ if action == "temp":
     finally:
         pwm.stop()
         GPIO.cleanup()
+    sender_socket.close()
 
 if action == "dust":
-    # sleep인 경우 원하는 mp3 파일을 재생합니다.
-    pygame.mixer.music.load("wake_up.mp3")
+    message = "dust"
+    sender_socket.sendto(message.encode(), (receiver_ip, receiver_port))
+    time.sleep(1)
+    pygame.mixer.music.load("dust.mp3")
     pygame.mixer.music.play()
     # 재생이 끝날 때까지 대기
     while pygame.mixer.music.get_busy():
         time.sleep(1)
+    sender_socket.close()
 
 if action == "sound":
     # sleep인 경우 원하는 mp3 파일을 재생합니다.
-    pygame.mixer.music.load("wake_up.mp3")
-    pygame.mixer.music.play()
-    # 재생이 끝날 때까지 대기
-    while pygame.mixer.music.get_busy():
-        time.sleep(1)
-
-if action == "dashboard":
-    # sleep인 경우 원하는 mp3 파일을 재생합니다.
-    pygame.mixer.music.load("wake_up.mp3")
-    pygame.mixer.music.play()
-    # 재생이 끝날 때까지 대기
-    while pygame.mixer.music.get_busy():
-        time.sleep(1)
+    time.sleep(30);
     
 #TTS
