@@ -77,8 +77,7 @@ int main() {
 
     if(buffer == "temp"){
         const char* mp3FilePath = "emergency.mp3";
-        string command = "amixer -D pulse sset Master " + to_string(volumePercentage) + "&";
-        system(command.c_str());
+        system("amixer -D pulse sset Master 80%");
         system(("mpg123 " + string(mp3FilePath)).c_str());
     }
 
