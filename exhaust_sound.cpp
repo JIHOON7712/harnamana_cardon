@@ -81,7 +81,7 @@ int main(){
     else{
         pid_t checksleepdust = fork();
             if(checksleepdust == 0){
-                if (execlp("./checksleepdust", "checksleepdust", NULL) == -1) {
+                if (execlp("./window_control", "window_control", NULL) == -1) {
                 perror("execlp"); // 오류 메시지 출력
                 exit(EXIT_FAILURE); // 실패 시 자식 프로세스 종료
             }
