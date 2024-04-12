@@ -37,6 +37,7 @@ void pedestrianCheckHandler(int sig){
 	pinMode (trigPin, OUTPUT);
 	pinMode (echoPin, INPUT);
 	
+    int flag = 0;
 	for(;;)
 	{
 		digitalWrite (trigPin, LOW);
@@ -53,12 +54,15 @@ void pedestrianCheckHandler(int sig){
 		travelTime = micros() - startTime;
 		
 		int distance = travelTime / 58;
-		if(distance < 10){
-            const char* mp3FilePath = "watchout.mp3";
-            system("amixer -D pulse sset Master 70%");
+        if(speed <= 70 && distance <= 10){
+            flag = 1;
+            int volumePercentage = 70 / distance;
+            const char* mp3FilePath = "exhaust_sound.mp3";
+            string command = "amixer -D pulse sset Master " + to_string(volumePercentage) + "&";
+            system(command.c_str());
             system(("mpg123 " + string(mp3FilePath)).c_str());
-            break;
         }
+        if(flag == 1) break;
 		printf( "Distance: %dcm\n", distance);
 		delay(200);
 	}
