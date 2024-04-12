@@ -10,6 +10,7 @@
 
 #define RECEIVER_PORT 50000
 #define BUFFER_SIZE 1024
+#define SERVO1 10
 
 void servo_setup() { // 서보모터 셋업
     wiringPiSetup(); // WiringPi 초기화
@@ -79,9 +80,9 @@ int main() {
         system(("mpg123 " + string(mp3FilePath)).c_str());
     }
 
-    window_open();
+    //window_open();
     sleep(3);
-    window_close();
+    //window_close();
 
     // 소켓 닫기
     close(receiverSocket);
