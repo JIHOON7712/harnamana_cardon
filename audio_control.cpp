@@ -203,7 +203,7 @@ int main() {
 
     if(sleep_pid == 0){
         sleep(3);
-        //sleepDectection();
+        sleepDectection();
     }else{
         pid_t sensor_pid = fork();
 
