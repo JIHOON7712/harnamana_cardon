@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include <cstring>
 #include <sys/wait.h>
 #include <cstdlib>
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include <wiringPi.h>
+//#include <wiringPi.h>
 #include <string>
 
 using namespace std;
@@ -110,13 +111,13 @@ int main(){
                 // 데이터 수신
                 struct sockaddr_in senderAddr;
                 socklen_t senderAddrLen = sizeof(senderAddr);
+                int received_data = ntohl(received_data);
                 ssize_t bytesReceived = recvfrom(receiverSocket, &received_data, sizeof(received_data), 0,
                                                     (struct sockaddr*)&senderAddr, &senderAddrLen);
 
                 // 수신된 데이터를 네트워크 바이트 순서에서 호스트 바이트 순서로 변환
-                received_data = ntohl(received_data);
+                close(receiverSocket);
             }
-            close(receiverSocket);
         }
     }
 }
