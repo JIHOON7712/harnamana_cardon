@@ -19,12 +19,24 @@
 #include <net/if.h>
 #include <linux/can.h>
 #include <linux/can/raw.h>
+// GPIO
+// #include <wiringPi.h>
 
 #define RECEIVER_IP "192.168.1.11"
 #define RECEIVER_PORT 50001
 #define BUFFER_SIZE 1024
 
 using namespace std;
+
+// LED TURN ON FUNCTION
+// void turnOnLED(int pin) {
+//     digitalWrite(pin, HIGH); // LED 켜기
+// }
+
+// // LED TURN OFF FUNCTION
+// void turnOffLED(int pin) {
+//     digitalWrite(pin, LOW); // LED 끄기
+// }
 
 vector<pair<string,int>> event;
 pid_t ppid = getppid(); //music player pid
@@ -145,6 +157,7 @@ void sensorDetection(){
 }
 
 int main() {
+
     struct sigaction sleepcheck;
     sleepcheck.sa_handler = sleepCheckHandler;
     sigemptyset(&sleepcheck.sa_mask);
@@ -201,7 +214,7 @@ int main() {
 
     if(sleep_pid == 0){
         sleep(3);
-        sleepDectection();
+        // sleepDectection();
     }else{
         pid_t sensor_pid = fork();
 
@@ -211,6 +224,9 @@ int main() {
         }
         else{
             sleep(2);
+            digitalWrite(27, HIGH);
+            delay(5000);
+            digitalWrite(27, LOW);
             printf("Audio schedule process pid : %d\n",getpid());
             while(1){
                 if(event.size() != 0){
@@ -221,9 +237,11 @@ int main() {
                         event.erase(event.begin());
                         switch(temp){
                             case 1:
+
                                 kill(ppid, SIGRTMIN + 2);
                                 break;
                             case 2:
+                                
                                 kill(ppid, SIGRTMIN + 3);
                                 break;
                             case 3:
@@ -235,6 +253,7 @@ int main() {
                         }
                     }
                     else{
+                        // SLEEP
                         event.erase(it);
                         kill(ppid, SIGUSR1);
                     }
