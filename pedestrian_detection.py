@@ -5,6 +5,7 @@ import random
 import sys
 import os
 import signal
+import time
 
 # 동영상 불러오기
 cap=cv2.VideoCapture(0)
@@ -50,6 +51,8 @@ while True:
         ppid = os.getppid()
         os.kill(ppid,signal.SIGUSR1)
         print("signal send to",ppid)
-        exit(0)
+        
+        human_detecting_counter = 0
+        time.sleep(10)
 
 cv2.destroyAllWindows()
