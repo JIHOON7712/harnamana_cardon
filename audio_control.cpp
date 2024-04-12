@@ -21,7 +21,7 @@
 #include <linux/can.h>
 #include <linux/can/raw.h>
 // GPIO
-#include <wiringPi.h>
+// #include <wiringPi.h>
 
 #define RECEIVER_IP "192.168.1.11"
 #define RECEIVER_PORT 50001
@@ -29,14 +29,14 @@
 using namespace std;
 
 // LED TURN ON FUNCTION
-void turnOnLED(int pin) {
-    digitalWrite(pin, HIGH); // LED 켜기
-}
+// void turnOnLED(int pin) {
+//     digitalWrite(pin, HIGH); // LED 켜기
+// }
 
-// LED TURN OFF FUNCTION
-void turnOffLED(int pin) {
-    digitalWrite(pin, LOW); // LED 끄기
-}
+// // LED TURN OFF FUNCTION
+// void turnOffLED(int pin) {
+//     digitalWrite(pin, LOW); // LED 끄기
+// }
 
 vector<pair<string,int>> event;
 pid_t ppid = getppid(); //music player pid
@@ -159,13 +159,6 @@ void sensorDetection(){
 }
 
 int main() {
-    // GPIO SETUP
-    wiringPiSetupGpio(); // Broadcom GPIO 핀 번호 사용 초기화
-
-    // 사용할 핀을 출력 모드로 설정
-    pinMode(27, OUTPUT);
-    pinMode(28, OUTPUT);
-    pinMode(29, OUTPUT);
 
     struct sigaction sleepcheck;
     sleepcheck.sa_handler = sleepCheckHandler;
@@ -233,6 +226,9 @@ int main() {
         }
         else{
             sleep(2);
+            digitalWrite(27, HIGH);
+            delay(5000);
+            digitalWrite(27, LOW);
             printf("Audio schedule process pid : %d\n",getpid());
             while(1){
                 if(event.size() != 0){
@@ -243,21 +239,14 @@ int main() {
                         event.erase(event.begin());
                         switch(temp){
                             case 1:
-                                turnOnLED(27); // GPIO 17번 핀에 연결된 LED 켜기
-                                delay(5000);
-                                turnOffLED(27); // GPIO 17번 핀에 연결된 LED 끄기
+
                                 kill(ppid, SIGRTMIN + 2);
                                 break;
                             case 2:
-                                turnOnLED(28); // GPIO 17번 핀에 연결된 LED 켜기
-                                delay(5000);
-                                turnOffLED(28); // GPIO 17번 핀에 연결된 LED 끄기
+                                
                                 kill(ppid, SIGRTMIN + 3);
                                 break;
                             case 3:
-                                turnOnLED(29); // GPIO 17번 핀에 연결된 LED 켜기
-                                delay(5000);
-                                turnOffLED(29); // GPIO 17번 핀에 연결된 LED 끄기
                                 kill(ppid, SIGRTMIN + 4);
                                 break;
                             case 4:

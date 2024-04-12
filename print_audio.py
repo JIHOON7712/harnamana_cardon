@@ -7,10 +7,11 @@ import RPi.GPIO as GPIO
 
 # GPIO 핀 번호 기준 설정
 GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 
-ENA = 18 # WiringPi 핀 1은 BCM 핀 18에 해당
-IN1 = 27 # WiringPi 핀 2는 BCM 핀 27에 해당
-IN2 = 22 # WiringPi 핀 3은 BCM 핀 22에 해당
+ENA = 13 # WiringPi 핀 1은 BCM 핀 18에 해당
+IN1 = 19 # WiringPi 핀 2는 BCM 핀 27에 해당
+IN2 = 26 # WiringPi 핀 3은 BCM 핀 22에 해당
 
 # 핀 설정
 GPIO.setup(ENA, GPIO.OUT)
@@ -42,6 +43,14 @@ action = sys.argv[1]
 print("Arguments:", action)
 pygame.mixer.init()
 
+def led_on(pin):
+    GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, GPIO.HIGH)
+
+def led_off(pin):
+    GPIO.setup(pin, GPIO.OUT)
+    GPIO.output(pin, GPIO.LOW)
+
 if action == "sleep":
     # sleep인 경우 원하는 mp3 파일을 재생합니다.
     pygame.mixer.music.load("wake_up.mp3")
@@ -54,12 +63,17 @@ if action == "temp":
     # 모터 제어
     # temp인 경우 오디오 출력
     try:
-        # setMotorDirection(1)
-        # setMotorSpeed(80)
-        # time.sleep(10)
-        # setMotorDirection(0)
-        pygame.mixer.music.load("wake_up.mp3")
-        pygame.mixer.music.play()
+        led_on(16)
+        time.sleep(5)
+        led_off(16)
+        
+        setMotorDirection(1)
+        setMotorSpeed(80)
+        time.sleep(10)
+        setMotorDirection(0)
+    
+        # pygame.mixer.music.load("wake_up.mp3")
+        # pygame.mixer.music.play()
         # 재생이 끝날 때까지 대기
         while pygame.mixer.music.get_busy():
             time.sleep(1)
