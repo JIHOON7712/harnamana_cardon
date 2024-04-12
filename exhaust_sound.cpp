@@ -10,6 +10,9 @@
 
 using namespace std;
 
+int speed;
+#define RECEIVER_PORT 50001
+
 #define trigPin 1	//gpio 21
 #define echoPin 29	//gpio 18
 
@@ -90,7 +93,24 @@ int main(){
 
             while(true){
                 //내부 라즈베리파이로부터 값을 받아오기
+                int receiverSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+                struct sockaddr_in receiverAddr;
+                memset(&receiverAddr, 0, sizeof(receiverAddr));
+                receiverAddr.sin_family = AF_INET;
+                receiverAddr.sin_port = htons(RECEIVER_PORT);
+                receiverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+                bind(receiverSocket, (struct sockaddr*)&receiverAddr, sizeof(receiverAddr));
+
+                // 데이터 수신
+                struct sockaddr_in senderAddr;
+                socklen_t senderAddrLen = sizeof(senderAddr);
+                ssize_t bytesReceived = recvfrom(receiverSocket, &received_data, sizeof(received_data), 0,
+                                                    (struct sockaddr*)&senderAddr, &senderAddrLen);
+
+                // 수신된 데이터를 네트워크 바이트 순서에서 호스트 바이트 순서로 변환
+                received_data = ntohl(received_data);
             }
+            close(receiverSocket);
         }
     }
 }

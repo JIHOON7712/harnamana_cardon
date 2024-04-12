@@ -5,10 +5,10 @@
 #include <cstring>
 #include <unistd.h>
 #include <fcntl.h>
-#include "softPwm.h"
+#include <wiringPi.h>
+#include "softPwm.h
 
-#define PORT1 50000
-#define PORT2 50001
+#define RECEIVER_PORT 50000
 #define BUFFER_SIZE 1024
 
 void servo_setup() { // 서보모터 셋업
@@ -37,75 +37,47 @@ void window_close(){ // 창문 닫기
 }
 
 int main() {
-    int sockfd1, sockfd2;
-    char buffer1[BUFFER_SIZE], buffer2[BUFFER_SIZE];
-    struct sockaddr_in serverAddr1, serverAddr2;
-    socklen_t addr_size;
+    servo_setup();
+    char buffer[BUFFER_SIZE];
 
-    // 소켓1 생성
-    sockfd1 = socket(AF_INET, SOCK_DGRAM, 0);
-    // 소켓2 생성
-    sockfd2 = socket(AF_INET, SOCK_DGRAM, 0);
-
-    // 서버 주소1 설정
-    memset(&serverAddr1, '\0', sizeof(serverAddr1));
-    serverAddr1.sin_family = AF_INET;
-    serverAddr1.sin_port = htons(PORT1);
-    serverAddr1.sin_addr.s_addr = INADDR_ANY;
-
-    // 서버 주소2 설정
-    memset(&serverAddr2, '\0', sizeof(serverAddr2));
-    serverAddr2.sin_family = AF_INET;
-    serverAddr2.sin_port = htons(PORT2);
-    serverAddr2.sin_addr.s_addr = INADDR_ANY;
-
-    // 소켓1과 서버 주소1 바인딩
-    bind(sockfd1, (struct sockaddr*)&serverAddr1, sizeof(serverAddr1));
-
-    // 소켓2과 서버 주소2 바인딩
-    bind(sockfd2, (struct sockaddr*)&serverAddr2, sizeof(serverAddr2));
-
-    // 소켓을 비블록으로 설정
-    fcntl(sockfd1, F_SETFL, O_NONBLOCK);
-    fcntl(sockfd2, F_SETFL, O_NONBLOCK);
-
-    // 데이터 수신
-    fd_set readfds;
-    int maxfd = (sockfd1 > sockfd2) ? sockfd1 + 1 : sockfd2 + 1;
-
-    while (true) {
-        FD_ZERO(&readfds);
-        FD_SET(sockfd1, &readfds);
-        FD_SET(sockfd2, &readfds);
-
-        // select() 함수를 사용하여 소켓 이벤트 감지
-        int activity = select(maxfd, &readfds, nullptr, nullptr, nullptr);
-        if (activity < 0) {
-            std::cerr << "Error in select" << std::endl;
-            break;
-        }
-
-        if (FD_ISSET(sockfd1, &readfds)) {
-            // 소켓1에서 데이터 수신
-            addr_size = sizeof(serverAddr1);
-            int bytes_received1 = recvfrom(sockfd1, buffer1, BUFFER_SIZE, 0, (struct sockaddr*)&serverAddr1, &addr_size);
-            // 수신된 데이터 출력
-            std::cout << "Received message on PORT1: " << buffer2 << std::endl;
-        }
-
-        if (FD_ISSET(sockfd2, &readfds)) {
-            // 소켓2에서 데이터 수신
-            addr_size = sizeof(serverAddr2);
-            int bytes_received2 = recvfrom(sockfd2, buffer2, BUFFER_SIZE, 0, (struct sockaddr*)&serverAddr2, &addr_size);
-            // 수신된 데이터 출력
-            std::cout << "Received message on PORT2: " << buffer2 << std::endl;
-        }
+    // 소켓 생성
+    int receiverSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (receiverSocket < 0) {
+        std::cerr << "Error creating socket" << std::endl;
+        return 1;
     }
 
-    // 소켓1 닫기
-    close(sockfd1);
-    // 소켓2 닫기
-    close(sockfd2);
+    // 수신 소켓에 바인딩
+    struct sockaddr_in receiverAddr;
+    memset(&receiverAddr, 0, sizeof(receiverAddr));
+    receiverAddr.sin_family = AF_INET;
+    receiverAddr.sin_port = htons(RECEIVER_PORT);
+    receiverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    if (bind(receiverSocket, (struct sockaddr*)&receiverAddr, sizeof(receiverAddr)) < 0) {
+        std::cerr << "Error binding socket" << std::endl;
+        close(receiverSocket);
+        return 1;
+    }
+
+    // 데이터 수신 및 출력
+    struct sockaddr_in senderAddr;
+    socklen_t senderAddrLen = sizeof(senderAddr);
+    ssize_t bytesReceived = recvfrom(receiverSocket, buffer, BUFFER_SIZE, 0,
+                                     (struct sockaddr*)&senderAddr, &senderAddrLen);
+    if (bytesReceived < 0) {
+        std::cerr << "Error receiving data" << std::endl;
+        close(receiverSocket);
+        return 1;
+    }
+
+    std::cout << "수신된 데이터: " << buffer << std::endl;
+
+    window_open();
+    sleep(3);
+    window_close();
+
+    // 소켓 닫기
+    close(receiverSocket);
 
     return 0;
 }
