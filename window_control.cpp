@@ -8,6 +8,8 @@
 #include <wiringPi.h>
 #include "softPwm.h"
 
+using namespace std;
+
 #define RECEIVER_PORT 50000
 #define BUFFER_SIZE 1024
 #define SERVO1 10
