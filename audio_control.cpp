@@ -209,6 +209,7 @@ int main() {
     }
     sensorDataList.clear();
     printf("Pressed\n");
+    kill(ppid,SIGRTMIN + 5);
 
     pid_t sleep_pid = fork();
 

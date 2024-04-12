@@ -9,7 +9,6 @@ from gtts import gTTS
 
 import requests
 import json
-import pygame.mixer
 
 lock = multiprocessing.Lock()
 
@@ -59,12 +58,7 @@ def sound_child_process():
 
 def dashboard_handler(signum, frame):
     with lock:
-        pygame.mixer.music.set_volume(0.2)
-        child_process = multiprocessing.Process(target=dashboard_child_process)
-        print(os.getpid())
-        child_process.start()
-        child_process.join()
-        pygame.mixer.music.set_volume(1.0)
+        pass
 
 def dashboard_child_process():
     os.execlp("python3", "python3", "print_audio.py", "dashboard")
@@ -82,6 +76,8 @@ def play_background_music(music_file):
     # 배경음악 로드 및 재생 (반복 재생)
     pygame.mixer.music.load(music_file)
     pygame.mixer.music.play(-1)  # -1을 전달하여 반복 재생을 설정합니다.
+
+signal.sigwait([signal.SIGRTMIN + 5])
 
 # api 정보 - 위치, api키, 언어, api call
 city = "Seoul"
