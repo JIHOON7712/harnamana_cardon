@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-//#include <wiringPi.h>
+#include <wiringPi.h>
 #include <string>
 
 using namespace std;
