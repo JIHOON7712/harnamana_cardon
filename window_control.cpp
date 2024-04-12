@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <wiringPi.h>
-#include "softPwm.h
+#include "softPwm.h"
 
 #define RECEIVER_PORT 50000
 #define BUFFER_SIZE 1024
