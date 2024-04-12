@@ -4,6 +4,8 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <cstdlib>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 #include <wiringPi.h>
 #include <string>
