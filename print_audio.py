@@ -68,6 +68,7 @@ if action == "sleep":
     sender_socket.sendto(message.encode('utf-8'), (receiver_ip, receiver_port)) 
     time.sleep(1)
     pygame.mixer.music.load("drowsy_detection.mp3")
+    pygame.mixer.music.set_volume(1)
     pygame.mixer.music.play()
     # 재생이 끝날 때까지 대기
     while pygame.mixer.music.get_busy():
@@ -87,6 +88,7 @@ if action == "dust":
     # sender_socket.sendto(message.encode('utf-8'), (receiver_ip, receiver_port)) 
     time.sleep(1)
     pygame.mixer.music.load("dust.mp3")
+    pygame.mixer.music.set_volume(1)
     pygame.mixer.music.play()
     
     setMotorDirection(1)

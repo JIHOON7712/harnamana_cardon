@@ -53,6 +53,7 @@ signal.signal(signal.SIGRTMIN + 5, dashboard_handler)
 def play_background_music(music_file):
     # 초기화
     pygame.mixer.init(freq, bitsize, channels, buffer)
+    pygame.mixer.music.set_volume(1)
     # 배경음악 로드 및 재생 (반복 재생)
     pygame.mixer.music.load(music_file)
     pygame.mixer.music.play(-1)  # -1을 전달하여 반복 재생을 설정합니다.
