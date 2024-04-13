@@ -93,20 +93,21 @@ if action == "temp":
     sender_socket.close()
 
 if action == "dust":
-    message = "dust"
-    sender_socket.sendto(message.encode(), (receiver_ip, receiver_port))
+    # message = "dust"
+    # sender_socket.sendto(message.encode(), (receiver_ip, receiver_port))
     time.sleep(1)
     pygame.mixer.music.load("dust.mp3")
     pygame.mixer.music.play()
     
     setMotorDirection(1)
-    setMotorSpeed(80)
-    time.sleep(10)
+    setMotorSpeed(30)
+    time.sleep(5)
     setMotorDirection(0)
+    
     # 재생이 끝날 때까지 대기
     while pygame.mixer.music.get_busy():
         time.sleep(1)
-    sender_socket.close()
+    # sender_socket.close()
 
 if action == "sound":
     # sleep인 경우 원하는 mp3 파일을 재생합니다.

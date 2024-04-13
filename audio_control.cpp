@@ -117,19 +117,20 @@ void sensorDetection(){
         //     sensor_flag = 1;
         //     kill(parent_pid, SIGRTMIN + 2);
         // }
+
         //소리감지 센서
-        if(sensorDataList[0].frame.data[1] >= 10 && sensor_flag != 2){
-            printf("Success SOUND\n");
-            sensor_flag = 2;
-            kill(parent_pid, SIGRTMIN + 4);
-        }
+        // if(sensorDataList[0].frame.data[1] >= 10 && sensor_flag != 2){
+        //     printf("Success SOUND\n");
+        //     sensor_flag = 2;
+        //     kill(parent_pid, SIGRTMIN + 4);
+        // }
 
         //미세먼지 센서
-        // if(sensorDataList[0].frame.data[4] >= 20 && sensor_flag != 3){
-        //     printf("Success DUST\n");
-        //     sensor_flag = 3;
-        //     kill(parent_pid, SIGRTMIN + 3);
-        // }
+        if(sensorDataList[0].frame.data[4] >= 20 && sensor_flag != 3){
+            printf("Success DUST\n");
+            sensor_flag = 3;
+            kill(parent_pid, SIGRTMIN + 3);
+        }
 
         //계기판 경고인식해서 
         //kill(parent_pid, SIGRTMIN + 5);
