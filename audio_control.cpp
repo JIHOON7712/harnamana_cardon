@@ -111,12 +111,12 @@ void sensorDetection(){
 
         cout << (int)sensorDataList[0].frame.data[0] << " " << (int)sensorDataList[0].frame.data[1] << " " << (int)sensorDataList[0].frame.data[2] << " " << (int)sensorDataList[0].frame.data[3] << " " << (int)sensorDataList[0].frame.data[4] << " " << (int)sensorDataList[0].frame.data[5] << "\n";
 
-        //온습도
-        // if(sensorDataList[0].frame.data[2] >= 30 && sensorDataList[0].frame.data[0] <=10 && sensor_flag != 1){
-        //     printf("Success TEMPERATURE\n");
-        //     sensor_flag = 1;
-        //     kill(parent_pid, SIGRTMIN + 2);
-        // }
+        온습도
+        if(sensorDataList[0].frame.data[2] >= 30 && sensorDataList[0].frame.data[0] <=10 && sensor_flag != 1){
+            printf("Success TEMPERATURE\n");
+            sensor_flag = 1;
+            kill(parent_pid, SIGRTMIN + 2);
+        }
 
         //소리감지 센서
         // if(sensorDataList[0].frame.data[1] >= 10 && sensor_flag != 2){
@@ -125,12 +125,12 @@ void sensorDetection(){
         //     kill(parent_pid, SIGRTMIN + 4);
         // }
 
-        //미세먼지 센서
-        if(sensorDataList[0].frame.data[4] >= 20 && sensor_flag != 3){
-            printf("Success DUST\n");
-            sensor_flag = 3;
-            kill(parent_pid, SIGRTMIN + 3);
-        }
+        // //미세먼지 센서
+        // if(sensorDataList[0].frame.data[4] >= 20 && sensor_flag != 3){
+        //     printf("Success DUST\n");
+        //     sensor_flag = 3;
+        //     kill(parent_pid, SIGRTMIN + 3);
+        // }
 
         //계기판 경고인식해서 
         //kill(parent_pid, SIGRTMIN + 5);
