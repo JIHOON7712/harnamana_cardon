@@ -17,18 +17,15 @@ using namespace std;
 void servo_setup() { // 서보모터 셋업
     wiringPiSetup(); // WiringPi 초기화
     pinMode(SERVO1, OUTPUT);
+    softPwmCreate(SERVO1, 0, 200);
 }
 
 void window_open(){ // 창문 열기
-    softPwmCreate(SERVO1, 0, 200);
-    
     softPwmWrite(SERVO1, 25);   // +90도
     delay(1000);
 }
 
 void window_close(){ // 창문 닫기
-    softPwmCreate(SERVO1, 0, 200);
-    
     softPwmWrite(SERVO1, 5);   // 0도
     delay(1000);
 }
