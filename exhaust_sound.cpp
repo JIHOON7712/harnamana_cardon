@@ -76,10 +76,10 @@ int main(){
     pid_t camera = fork();
     if(camera == 0){
         
-        if(execlp("/usr/bin/python3", "python3", "pedestrian_detection.py", NULL) == -1) {
-            perror("execlp"); // 오류 메시지 출력
-            exit(EXIT_FAILURE); // 실패 시 자식 프로세스 종료
-        }
+        // if(execlp("/usr/bin/python3", "python3", "pedestrian_detection.py", NULL) == -1) {
+        //     perror("execlp"); // 오류 메시지 출력
+        //     exit(EXIT_FAILURE); // 실패 시 자식 프로세스 종료
+        // }
     }
     else{
         pid_t checksleepdust = fork();
@@ -116,7 +116,7 @@ int main(){
                 //                                     (struct sockaddr*)&senderAddr, &senderAddrLen);
 
                 // 수신된 데이터를 네트워크 바이트 순서에서 호스트 바이트 순서로 변환
-                close(receiverSocket);
+                // close(receiverSocket);
             }
         }
     }
