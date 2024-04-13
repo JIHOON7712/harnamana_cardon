@@ -12,7 +12,7 @@ using namespace std;
 
 #define RECEIVER_PORT 50000
 #define BUFFER_SIZE 1024
-#define SERVO1 10
+#define SERVO1 26
 
 void servo_setup() { // 서보모터 셋업
     wiringPiSetup(); // WiringPi 초기화
@@ -23,9 +23,9 @@ void window_open(){ // 창문 열기
     softPwmCreate(SERVO1, 0, 200);
     // softPwmWrite(SERVO1, 10);   // -90도
     // delay(1000);
-    softPwmWrite(SERVO1, 15);   // 0도
+    softPwmWrite(SERVO1, 5);   // 0도
     delay(1000);
-    softPwmWrite(SERVO1, 20);   // +90도
+    softPwmWrite(SERVO1, 25);   // +90도
     delay(1000);
 }
 
@@ -33,9 +33,9 @@ void window_close(){ // 창문 닫기
     softPwmCreate(SERVO1, 0, 200);
     // softPwmWrite(SERVO1, 10);   // -90도
     // delay(1000);
-    softPwmWrite(SERVO1, 20);   // +90도
+    softPwmWrite(SERVO1, 25);   // +90도
     delay(1000);
-    softPwmWrite(SERVO1, 15);   // 0도
+    softPwmWrite(SERVO1, 5);   // 0도
     delay(1000);
 }
 
@@ -73,17 +73,17 @@ int main() {
         return 1;
     }
 
-    string received_data(buffer, bytesReceived);
+    std::cout << "수신된 데이터: " << buffer << std::endl;
 
-    if(received_data == string("temp")){
+    if(buffer == "temp"){
         const char* mp3FilePath = "emergency.mp3";
         system("amixer -D pulse sset Master 80%");
         system(("mpg123 " + string(mp3FilePath)).c_str());
     }
 
-    window_open();
+    //window_open();
     sleep(3);
-    window_close();
+    //window_close();
 
     // 소켓 닫기
     close(receiverSocket);
