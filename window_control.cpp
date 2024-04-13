@@ -67,7 +67,7 @@ int main() {
     std::cout << "수신된 데이터: " << buffer << std::endl;
 
     string data(buffer,4);
-    window_open();
+    window_close();
     sleep(3);
 
     if(data == string("temp")){
@@ -76,7 +76,7 @@ int main() {
         system(("mpg123 " + string(mp3FilePath)).c_str());
     }
 
-    window_close();
+    window_open();
 
     // 소켓 닫기
     close(receiverSocket);
