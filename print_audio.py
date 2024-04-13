@@ -73,14 +73,14 @@ if action == "temp":
     # 모터 제어
     # temp인 경우 오디오 출력
     try:
-        led_on(16)
-        time.sleep(5)
-        led_off(16)
+        # led_on(16)
+        # time.sleep(5)
+        # led_off(16)
         
-        setMotorDirection(1)
-        setMotorSpeed(80)
-        time.sleep(10)
-        setMotorDirection(0)
+        # setMotorDirection(1)
+        # setMotorSpeed(80)
+        # time.sleep(10)
+        # setMotorDirection(0)
     
         # pygame.mixer.music.load("wake_up.mp3")
         # pygame.mixer.music.play()
@@ -98,6 +98,11 @@ if action == "dust":
     time.sleep(1)
     pygame.mixer.music.load("dust.mp3")
     pygame.mixer.music.play()
+    
+    setMotorDirection(1)
+    setMotorSpeed(80)
+    time.sleep(10)
+    setMotorDirection(0)
     # 재생이 끝날 때까지 대기
     while pygame.mixer.music.get_busy():
         time.sleep(1)
@@ -105,6 +110,7 @@ if action == "dust":
 
 if action == "sound":
     # sleep인 경우 원하는 mp3 파일을 재생합니다.
-    time.sleep(10);
+    time.sleep(10)
+    exit(0)
     
 #TTS
