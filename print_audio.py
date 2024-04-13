@@ -11,6 +11,12 @@ receiver_port = 50000
 
 sender_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
+
+freq = 44100
+bitsize = -16
+channels = 2
+buffer = 4096
+
 # GPIO 핀 번호 기준 설정
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -47,7 +53,7 @@ def setMotorSpeed(speed):
 os.getppid()
 action = sys.argv[1]
 print("Arguments:", action)
-pygame.mixer.init()
+pygame.mixer.init(freq, bitsize, channels, buffer)
 
 def led_on(pin):
     GPIO.setup(pin, GPIO.OUT)
