@@ -112,11 +112,11 @@ void sensorDetection(){
         cout << (int)sensorDataList[0].frame.data[0] << " " << (int)sensorDataList[0].frame.data[1] << " " << (int)sensorDataList[0].frame.data[2] << " " << (int)sensorDataList[0].frame.data[3] << " " << (int)sensorDataList[0].frame.data[4] << " " << (int)sensorDataList[0].frame.data[5] << "\n";
 
         //온습도
-        if(sensorDataList[0].frame.data[2] >= 30 && sensorDataList[0].frame.data[0] <=10 && sensor_flag != 1){
-            printf("Success TEMPERATURE\n");
-            sensor_flag = 1;
-            kill(parent_pid, SIGRTMIN + 2);
-        }
+        // if(sensorDataList[0].frame.data[2] >= 30 && sensorDataList[0].frame.data[0] <=10 && sensor_flag != 1){
+        //     printf("Success TEMPERATURE\n");
+        //     sensor_flag = 1;
+        //     kill(parent_pid, SIGRTMIN + 2);
+        // }
 
         //소리감지 센서
         // if(sensorDataList[0].frame.data[1] >= 10 && sensor_flag != 2){
@@ -227,7 +227,7 @@ int main() {
 
     if(sleep_pid == 0){
         sleep(3);
-        // sleepDectection();
+        sleepDectection();
     }else{
         pid_t sensor_pid = fork();
 

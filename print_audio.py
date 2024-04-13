@@ -73,6 +73,7 @@ if action == "sleep":
     while pygame.mixer.music.get_busy():
         time.sleep(1)
     sender_socket.close()
+    exit(0)
 
 if action == "temp":
     message = "temp"
