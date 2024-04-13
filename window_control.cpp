@@ -21,20 +21,14 @@ void servo_setup() { // 서보모터 셋업
 
 void window_open(){ // 창문 열기
     softPwmCreate(SERVO1, 0, 200);
-    // softPwmWrite(SERVO1, 10);   // -90도
-    // delay(1000);
-    softPwmWrite(SERVO1, 5);   // 0도
-    delay(1000);
+    
     softPwmWrite(SERVO1, 25);   // +90도
     delay(1000);
 }
 
 void window_close(){ // 창문 닫기
     softPwmCreate(SERVO1, 0, 200);
-    // softPwmWrite(SERVO1, 10);   // -90도
-    // delay(1000);
-    softPwmWrite(SERVO1, 25);   // +90도
-    delay(1000);
+    
     softPwmWrite(SERVO1, 5);   // 0도
     delay(1000);
 }
@@ -75,13 +69,15 @@ int main() {
 
     std::cout << "수신된 데이터: " << buffer << std::endl;
 
-    if(buffer == "temp"){
+    string data(buffer,4);
+
+    if(data == string("temp")){
         const char* mp3FilePath = "emergency.mp3";
         system("amixer -D pulse sset Master 80%");
         system(("mpg123 " + string(mp3FilePath)).c_str());
     }
 
-    //window_open();
+    window_open();
     sleep(3);
     //window_close();
 
