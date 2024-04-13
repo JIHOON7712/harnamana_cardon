@@ -4,7 +4,7 @@ import signal
 import multiprocessing
 import time
 import pygame
-
+import subprocess
 import requests
 import json
 
@@ -51,13 +51,9 @@ def dust_child_process():
 def sound_handler(signum, frame):
     with lock:
         pygame.mixer.music.set_volume(0.2)
-        child_process = multiprocessing.Process(target=sound_child_process)
-        child_process.start()
-        child_process.join()
+        sound_process = subprocess.Popen(["python3", "print_audio.py", "sound"])
+        sound_process.communicate()  # 자식 프로세스의 종료를 기다림
         pygame.mixer.music.set_volume(1.0)
-
-def sound_child_process():
-    os.execlp("python3", "python3", "print_audio.py", "sound")
 
 def dashboard_handler(signum, frame):
     with lock:
