@@ -57,11 +57,11 @@ void pedestrianCheckHandler(int sig){
 		travelTime = micros() - startTime;
 		
 		int distance = travelTime / 58;
-        if(speed <= 70 && distance <= 10){
+        if(speed <= 70 && distance <= 200){
             flag = 1;
-            int volumePercentage = 70 / distance;
+            int volumePercentage = 100 / (distance/200);
             const char* mp3FilePath = "exhaust_sound.mp3";
-            string command = "amixer -D pulse sset Master " + to_string(volumePercentage) + "&";
+            string command = "amixer -D pulse sset Master " + to_string(volumePercentage) + "%";
             system(command.c_str());
             system(("mpg123 " + string(mp3FilePath)).c_str());
         }
@@ -98,26 +98,49 @@ int main(){
             pedestriancheck.sa_flags = 0;
             sigaction(SIGUSR1, &pedestriancheck, 0);
 
-            while(true){
-                //내부 라즈베리파이로부터 값을 받아오기
-                // int receiverSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-                // struct sockaddr_in receiverAddr;
-                // memset(&receiverAddr, 0, sizeof(receiverAddr));
-                // receiverAddr.sin_family = AF_INET;
-                // receiverAddr.sin_port = htons(RECEIVER_PORT);
-                // receiverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-                // bind(receiverSocket, (struct sockaddr*)&receiverAddr, sizeof(receiverAddr));
+            int receiverSocket;
+            struct sockaddr_in receiverAddr, senderAddr;
+            socklen_t senderAddrLen = sizeof(senderAddr);
+            int received_data;
+            ssize_t bytesReceived;
 
-                // // 데이터 수신
-                // struct sockaddr_in senderAddr;
-                // socklen_t senderAddrLen = sizeof(senderAddr);
-                // int received_data = ntohl(received_data);
-                // ssize_t bytesReceived = recvfrom(receiverSocket, &received_data, sizeof(received_data), 0,
-                //                                     (struct sockaddr*)&senderAddr, &senderAddrLen);
-
-                // 수신된 데이터를 네트워크 바이트 순서에서 호스트 바이트 순서로 변환
-                // close(receiverSocket);
+            // 소켓 생성
+            receiverSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+            if (receiverSocket < 0) {
+                perror("Socket creation failed");
+                return -1;
             }
+
+            // 주소 초기화
+            memset(&receiverAddr, 0, sizeof(receiverAddr));
+            receiverAddr.sin_family = AF_INET;
+            receiverAddr.sin_port = htons(RECEIVER_PORT);
+            receiverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+            // 주소 바인딩
+            if (bind(receiverSocket, (struct sockaddr*)&receiverAddr, sizeof(receiverAddr)) < 0) {
+                perror("Bind failed");
+                close(receiverSocket);
+                return -1;
+            }
+
+            // 무한 루프에서 데이터 수신
+            while (1) {
+                bytesReceived = recvfrom(receiverSocket, &received_data, sizeof(received_data), 0,
+                                        (struct sockaddr*)&senderAddr, &senderAddrLen);
+                if (bytesReceived < 0) {
+                    perror("Receive failed");
+                    break;  // 오류 발생 시 루프 탈출
+                }
+
+                // 받은 데이터를 전역 변수 speed에 저장
+                speed = ntohl(received_data);
+            }
+
+            // 소켓 종료
+            close(receiverSocket);
+
+
         }
     }
 }
