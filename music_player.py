@@ -52,7 +52,7 @@ def sound_handler(signum, frame):
     with lock:
         pygame.mixer.music.set_volume(0.2)
         sound_process = subprocess.Popen(["python3", "print_audio.py", "sound"])
-        sound_process.communicate()  # 자식 프로세스의 종료를 기다림
+        sound_process.wait()  # 자식 프로세스의 종료를 기다림
         pygame.mixer.music.set_volume(1.0)
 
 def dashboard_handler(signum, frame):
