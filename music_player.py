@@ -18,35 +18,23 @@ buffer = 4096
 def sigusr1_handler(signum, frame):
     with lock:
         pygame.mixer.music.set_volume(0.2)
-        child_process = multiprocessing.Process(target=sleep_child_process)
-        child_process.start()
-        child_process.join()
+        child_process = subprocess.Popen(["python3", "print_audio.py", "sleep"])
+        child_process.wait() 
         pygame.mixer.music.set_volume(1.0)
-
-def sleep_child_process():
-    os.execlp("python3", "python3", "print_audio.py", "sleep")
 
 def temp_handler(signum, frame):
     with lock:
         pygame.mixer.music.set_volume(0.2)
-        child_process = multiprocessing.Process(target=temp_child_process)
-        child_process.start()
-        child_process.join()
+        child_process = subprocess.Popen(["python3", "print_audio.py", "temp"])
+        child_process.wait() 
         pygame.mixer.music.set_volume(1.0)
-
-def temp_child_process():
-    os.execlp("python3", "python3", "print_audio.py", "temp")
 
 def dust_handler(signum, frame):
     with lock:
         pygame.mixer.music.set_volume(0.2)
-        child_process = multiprocessing.Process(target=dust_child_process)
-        child_process.start()
-        child_process.join()
+        child_process = subprocess.Popen(["python3", "print_audio.py", "dust"])
+        child_process.wait() 
         pygame.mixer.music.set_volume(1.0)
-
-def dust_child_process():
-    os.execlp("python3", "python3", "print_audio.py", "dust")
 
 def sound_handler(signum, frame):
     with lock:

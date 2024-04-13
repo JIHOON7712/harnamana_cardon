@@ -108,6 +108,7 @@ if action == "dust":
     while pygame.mixer.music.get_busy():
         time.sleep(1)
     # sender_socket.close()
+    exit(0)
 
 if action == "sound":
     # sleep인 경우 원하는 mp3 파일을 재생합니다.
