@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 
 int main() {
-
+    system("sudo ip route add 192.168.1.11 via 192.168.1.10");
     pid_t volume_control_pid = fork();
     if(volume_control_pid == 0){
         if(execlp("./audio_control","./audio_control", NULL) == -1) {

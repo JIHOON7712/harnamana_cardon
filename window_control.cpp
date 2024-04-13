@@ -70,6 +70,8 @@ int main() {
     std::cout << "수신된 데이터: " << buffer << std::endl;
 
     string data(buffer,4);
+    window_open();
+    sleep(3);
 
     if(data == string("temp")){
         const char* mp3FilePath = "emergency.mp3";
@@ -77,8 +79,6 @@ int main() {
         system(("mpg123 " + string(mp3FilePath)).c_str());
     }
 
-    window_open();
-    sleep(3);
     window_close();
 
     // 소켓 닫기
