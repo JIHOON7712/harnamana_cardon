@@ -73,7 +73,7 @@ def play_background_music(music_file):
     pygame.mixer.music.load(music_file)
     pygame.mixer.music.play(-1)  # -1을 전달하여 반복 재생을 설정합니다.
 
-signal.sigwait([signal.SIGRTMIN + 5])
+# signal.sigwait([signal.SIGRTMIN + 5])
 
 signal.signal(signal.SIGUSR1, sigusr1_handler)
 signal.signal(signal.SIGRTMIN + 2, temp_handler)
@@ -83,9 +83,9 @@ signal.signal(signal.SIGRTMIN + 4, sound_handler)
 file = "result_files/weather.mp3"
 
 pygame.mixer.init(freq, bitsize, channels, buffer)
-pygame.mixer.music.load(file)
-pygame.mixer.music.play()
-time.sleep(6)
+# pygame.mixer.music.load(file)
+# pygame.mixer.music.play()
+# time.sleep(6)
 
 music_file = "sunlit-whistle-200168.mp3"
 play_background_music(music_file)
