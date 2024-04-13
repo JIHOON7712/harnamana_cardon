@@ -204,12 +204,23 @@ int main() {
         return -2;
     }
 
-    while(sensorDataList.size() == 0 || sensorDataList[sensorDataList.size()-1].frame.data[0] <= 128) {
+    bool pressed = false; // 조건에 해당하는 데이터를 발견했는지 여부를 나타내는 플래그
+
+    while(!pressed && (sensorDataList.size() == 0 || sensorDataList[sensorDataList.size()-1].frame.data[0] <= 128)) {
         readCANData(soc);
+
+        // 조건에 해당하는 데이터를 발견한 경우에만 플래그를 설정하고 반복문을 빠져나감
+        if (sensorDataList.size() > 0 && sensorDataList[sensorDataList.size()-1].frame.data[0] > 128) {
+            pressed = true;
+        }
+    }
+
+    // 조건에 해당하는 데이터를 발견한 경우에만 "Pressed"를 출력하고 시그널을 보냄
+    if (pressed) {
+        printf("Pressed\n");
+        kill(ppid, SIGRTMIN + 5);
     }
     sensorDataList.clear();
-    printf("Pressed\n");
-    kill(ppid,SIGRTMIN + 5);
 
     pid_t sleep_pid = fork();
 

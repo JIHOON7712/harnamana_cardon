@@ -105,6 +105,6 @@ if action == "dust":
 
 if action == "sound":
     # sleep인 경우 원하는 mp3 파일을 재생합니다.
-    time.sleep(30);
+    time.sleep(10);
     
 #TTS
