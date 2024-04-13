@@ -79,7 +79,7 @@ int main() {
 
     window_open();
     sleep(3);
-    //window_close();
+    window_close();
 
     // 소켓 닫기
     close(receiverSocket);
