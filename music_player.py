@@ -83,9 +83,9 @@ signal.signal(signal.SIGRTMIN + 4, sound_handler)
 file = "result_files/weather.mp3"
 
 pygame.mixer.init(freq, bitsize, channels, buffer)
-# pygame.mixer.music.load(file)
-# pygame.mixer.music.play()
-# time.sleep(6)
+pygame.mixer.music.load(file)
+pygame.mixer.music.play()
+time.sleep(6)
 
 music_file = "sunlit-whistle-200168.mp3"
 play_background_music(music_file)
