@@ -67,12 +67,21 @@ if action == "sleep":
     message = "sleep"
     sender_socket.sendto(message.encode('utf-8'), (receiver_ip, receiver_port)) 
     time.sleep(1)
+    
+    led_on(12)
     pygame.mixer.music.load("drowsy_detection.mp3")
     pygame.mixer.music.set_volume(1)
     pygame.mixer.music.play()
+    
+    
+    
+    
+    
     # 재생이 끝날 때까지 대기
     while pygame.mixer.music.get_busy():
         time.sleep(1)
+        
+    led_off(12)
     sender_socket.close()
     exit(0)
 
@@ -80,7 +89,10 @@ if action == "temp":
     message = "temp"
     sender_socket.sendto(message.encode('utf-8'), (receiver_ip, receiver_port)) 
     sender_socket.close()
+    led_on(16)
     time.sleep(10)
+    led_off(16)
+    
     exit()
 
 if action == "dust":
@@ -92,8 +104,10 @@ if action == "dust":
     pygame.mixer.music.play()
     
     setMotorDirection(1)
+    led_on(20)
     setMotorSpeed(30)
     time.sleep(5)
+    led_off(20)
     setMotorDirection(0)
     
     # 재생이 끝날 때까지 대기
@@ -104,7 +118,9 @@ if action == "dust":
 
 if action == "sound":
     # sleep인 경우 원하는 mp3 파일을 재생합니다.
+    led_on(21)
     time.sleep(10)
+    led_off(21)
     exit(0)
     
 #TTS
