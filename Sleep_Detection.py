@@ -75,7 +75,7 @@ while True:
     # Display the frame with eye rectangles and blinking frequency
     cv2.putText(frame, f"Blinks: {blink_counter}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
     cv2.putText(frame, f"{sleep_state}", (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-    cv2.imshow('Drowsiness Detection', frame)
+    # cv2.imshow('Drowsiness Detection', frame)
     
     # If 'q' is pushed, the loop will end.
     if cv2.waitKey(1) & 0xFF == ord('q'):
