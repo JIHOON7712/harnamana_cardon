@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include<iostream>
 
 #include <wiringPi.h>
 #include <string>
@@ -135,6 +136,7 @@ int main(){
 
                 // 받은 데이터를 전역 변수 speed에 저장
                 speed = ntohl(received_data);
+                cout << speed << endl;
             }
 
             // 소켓 종료
