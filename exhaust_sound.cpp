@@ -27,7 +27,7 @@ void pedestrianCheckHandler(int sig){
     //속도에 따라서 제동 거리 계산(90-110db로 제동거리를 scale)
     //보행자 거리를 측정해서 제동 거리 내에 있으면 즉각 가상 배기음 출력
     
-    int distance=0;
+    int distance=0; // 초음파 거리 변수
 	int pulse = 0;
 	
 	long startTime;
@@ -38,11 +38,11 @@ void pedestrianCheckHandler(int sig){
 		printf("Unable GPIO Setup"); 
 	}
 		
-	pinMode (trigPin, OUTPUT);
-	pinMode (echoPin, INPUT);
+	pinMode (trigPin, OUTPUT); // 초음파 센서 핀번호 설정1
+	pinMode (echoPin, INPUT);  // 초음파 센서 핀번호 설정2
 	
     int flag = 0;
-	for(;;)
+	for(;;) // 초음파 거리 측정 반복
 	{
 		digitalWrite (trigPin, LOW);
 		usleep(2);
@@ -58,7 +58,7 @@ void pedestrianCheckHandler(int sig){
 		travelTime = micros() - startTime;
 		
 		int distance = travelTime / 58;
-        if(speed <= 70 && distance <= 200){
+        if(speed <= 70 && distance <= 200){ // 차량 속도 70 이하 && 보행자와의 거리 200 cm(제동거리) 이하일 시 가상 배기음 출력
             flag = 1;
             int volumePercentage = 100 / (distance/200);
             const char* mp3FilePath = "exhaust_sound.mp3";
