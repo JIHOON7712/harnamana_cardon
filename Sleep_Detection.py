@@ -23,7 +23,8 @@ eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
 # Capture video feed from the webcam or external camera
 cap = cv2.VideoCapture(0)
 
-
+exit_flag = 0
+start_cnt = 0
 while True:
     # Read the current frame
     ret, frame = cap.read()
@@ -36,41 +37,49 @@ while True:
     cv2.line(frame, (0, 150), (800, 150), (255, 0, 0) ,2)
     cv2.line(frame, (0, 220), (800, 220), (255, 0, 0) ,2)
 
-    # Detect eyes in the grayscale frame
-    eyes = eye_cascade.detectMultiScale(gray, 1.3, 5)
-    
-    eyes_cnt = 0
-    for (x, y, w, h) in eyes:
-        # Draw rectangles around the detected eyes
-        if 160 <= x and (x+w) <= 480 and 150 <= y and (y+h) <= 220:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            eyes_cnt += 1 
-    
-    # Measure the time duration between consecutive blinks
+    start_cnt += 1
+    if start_cnt >= 100:
+        # Detect eyes in the grayscale frame
+        eyes = eye_cascade.detectMultiScale(gray, 1.3, 5)
+        
+        eyes_cnt = 0
+        for (x, y, w, h) in eyes:
+            # Draw rectangles around the detected eyes
+            if 160 <= x and (x+w) <= 480 and 150 <= y and (y+h) <= 220:
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                eyes_cnt += 1 
+        
+        # Measure the time duration between consecutive blinks
 
-    if eyes_cnt == 0:
-        if blink_start_time is None:
-            blink_start_time = time.time()
+        if eyes_cnt == 0:
+            if blink_start_time is None:
+                blink_start_time = time.time()
+            else:
+                if time.time() - blink_start_time > 0.3:
+                    blink_counter += 1
+                    blink_start_time = None
         else:
-            if time.time() - blink_start_time > 0.3:
-                blink_counter += 1
-                blink_start_time = None
-    else:
-        blink_start_time = None
-    
-    # In case of drowsiness, inform the driver.
-    if blink_counter >= 10:
-        print("졸음이 감지되었습니다!")
-        blink_counter = 0
-        sleep_state = "Sleepiness detection"
+            blink_start_time = None
 
-        # 시그널을 보냅니다.
-        parent_pid = os.getppid()
-        print("sleeping parent pid",parent_pid,"\n")
-        os.kill(parent_pid, signal.SIGUSR1)
+        # 졸음 감지 시 영상 처리 종료
+        if exit_flag == 1:
+            time.sleep(2)
+            break
+        
+        # In case of drowsiness, inform the driver.
+        if blink_counter >= 10:
+            print("졸음이 감지되었습니다!")
+            blink_counter = 0
+            sleep_state = "Sleepiness detection"
+            exit_flag = 1
 
-        # 10초 딜레이
-        time.sleep(10)
+            # 시그널을 보냅니다.
+            parent_pid = os.getppid()
+            print("sleeping parent pid",parent_pid,"\n")
+            os.kill(parent_pid, signal.SIGUSR1)
+
+            # # 10초 딜레이
+            # time.sleep(10)
     
     # Display the frame with eye rectangles and blinking frequency
     cv2.putText(frame, f"Blinks: {blink_counter}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
