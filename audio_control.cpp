@@ -132,9 +132,6 @@ void sensorDetection(){
             kill(parent_pid, SIGRTMIN + 3);
         }
 
-        //계기판 경고인식해서 
-        //kill(parent_pid, SIGRTMIN + 5);
-
         //가변저항 외부라파로 전송하기
         if(cnt > 100 ){
             cnt = 0;
